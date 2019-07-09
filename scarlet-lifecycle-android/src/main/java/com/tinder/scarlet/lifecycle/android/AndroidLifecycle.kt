@@ -54,4 +54,20 @@ object AndroidLifecycle {
         )
             .combineWith(ConnectivityOnLifecycle(application))
     }
+
+    @JvmStatic
+    @JvmOverloads
+    fun ofLifecycleApplicationCreated(
+        application: Application,
+        lifecycleOwner: LifecycleOwner,
+        throttleTimeoutMillis: Long = ACTIVITY_THROTTLE_TIMEOUT_MILLIS,
+        connectivityCheck: Boolean = true
+    ): Lifecycle {
+        return LifecycleOwnerCreatedLifecycle(
+            lifecycleOwner,
+            LifecycleRegistry(throttleTimeoutMillis)
+        ).apply {
+            if(connectivityCheck) combineWith(ConnectivityOnLifecycle(application))
+        }
+    }
 }
